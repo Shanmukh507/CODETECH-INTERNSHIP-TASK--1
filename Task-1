@@ -1,0 +1,54 @@
+import re
+
+class PasswordStrengthChecker:
+    def __init__(self):
+        self.common_passwords = [
+            "password", "iloveyou", "dragonball", "letmein", "monkey", "12345678", 
+            "qwertyuiop", "123456", "123456789", "1234567890", "qwerty", 
+            "abc123", "111111", "123123", "welcome", "password1", "admin", 
+            "1234", "passw0rd", "master"
+        ]
+
+    def evaluate_strength(self, password):
+        score = 0
+        
+        if len(password) < 8:
+            score += 10
+        elif len(password) < 12:
+            score += 30
+        else:
+            score += 50
+
+        if (re.search(r"[a-z]", password) and re.search(r"[A-Z]", password) and 
+            re.search(r"\d", password) and re.search(r"\W", password)):
+            score += 50
+        elif re.search(r"[a-z]", password) and re.search(r"[A-Z]", password) and re.search(r"\d", password):
+            score += 30
+        elif re.search(r"[a-z]", password) and re.search(r"[A-Z]", password):
+            score += 20
+        elif re.search(r"\d", password):
+            score += 10
+
+        if password.lower() not in self.common_passwords:
+            score += 10
+        else:
+            print("This is a common password and not recommended.")
+
+        return score
+
+def main():
+    checker = PasswordStrengthChecker()
+    password = input("Enter a password: ")
+    strength = checker.evaluate_strength(password)
+    
+    if strength < 40:
+        print(f"Weak password. Score: {strength}")
+    elif strength <= 80:
+        print(f"Medium password. Score: {strength}")
+    else:
+        if strength > 100:
+            strength = 100
+        print(f"Strong password. Score: {strength}")
+
+if __name__ == "__main__":
+    main()
